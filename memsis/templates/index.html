@@ -30,6 +30,13 @@
 </form>
 
 <table id="id_dump_list">
+    <thead>
+        <tr>
+            <th>파일 경로</th>
+            <th>프로파일</th>
+            <th>설명</th>
+        </tr>
+    </thead>
     {% for info in dump_list %}
         <tr>
             <td>{{ forloop.counter }}</td>

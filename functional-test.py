@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import print_function
 import unittest
 
 from selenium import webdriver
@@ -51,6 +52,16 @@ class FirstUserTest(unittest.TestCase):
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('Lyzer', header_text)
 
+        # 테이블 헤드 정보 확인
+        table = self.browser.find_element_by_id('id_dump_list')
+        ths = table.find_elements_by_tag_name('th')
+        self.assertTrue(any(u'파일 경로' == th.text for th in ths))
+        self.assertTrue(any(u'프로파일' == th.text for th in ths))
+        self.assertTrue(any(u'설명' == th.text for th in ths))
+
+        for th in ths:
+            print(th.text)
+
         # 분석할 덤프파일을 2회 추가한다
         # 입력내용
         #   메모리 덤프파일 로컬 경로
@@ -58,8 +69,6 @@ class FirstUserTest(unittest.TestCase):
         #   덤프파일 설명
         self.add_and_check_for_row_in_dump_list('/Users/J/Documents/ExampleImage/1.vmem', 'AutoDetect', u'트로이 목마')
         self.add_and_check_for_row_in_dump_list('/Users/J/Documents/ExampleImage/2.vmem', 'AutoDetect', u'랜섬웨어')
-
-
 
         # 덤프파일을 추가로 입력한다
         self.fail('Finish the test!')
