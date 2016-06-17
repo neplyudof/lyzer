@@ -30,11 +30,14 @@
 </form>
 
 <table id="id_dump_list">
-    <tr>
-        <td>{{ file_path }}</td>
-        <td>{{ profile }}</td>
-        <td>{{ description }}</td>
-    </tr>
+    {% for info in dump_list %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ info.file_path }}</td>
+            <td>{{ info.profile }}</td>
+            <td>{{ info.description }}</td>
+        </tr>
+    {% endfor %}
 </table>
 
 </body>

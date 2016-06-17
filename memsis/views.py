@@ -1,16 +1,21 @@
 # Create your views here.
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+
+from memsis.models import DumpInfo
 
 
 def index_page(request):
     if request.method == 'POST':
-        file_path = request.POST.get('file_path')
-        profile = request.POST.get('profile')
-        description = request.POST.get('description')
-        return render(request, 'index.html', {
-            'file_path': file_path,
-            'profile': profile,
-            'description': description
-        })
+        DumpInfo.objects.create(
+            file_path=request.POST['file_path'],
+            profile=request.POST['profile'],
+            description=request.POST['description']
+        )
 
-    return render(request, 'index.html')
+        return redirect('/')
+
+    dump_list = DumpInfo.objects.all()
+
+    return render(request, 'index.html', {
+        'dump_list': dump_list
+    })

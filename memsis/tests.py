@@ -31,17 +31,61 @@ class MainPageTest(TestCase):
         self.assertEqual(expected_html, response.content.decode('utf-8'))
 
     def test_index_page_can_save_POST_request(self):
+        file_path = '/Users/J/Documents/ExampleImage/1.vmem'
+        profile = 'AutoDetect'
+        description = 'test'
+
         request = HttpRequest()
         request.method = 'POST'
-        request.POST['file_path'] = '/Users/J/Documents/ExampleImage/1.vmem'
-        request.POST['profile'] = 'AutoDetect'
-        request.POST['description'] = 'test'
+        request.POST['file_path'] = file_path
+        request.POST['profile'] = profile
+        request.POST['description'] = description
 
+        index_page(request)
+
+        self.assertEqual(DumpInfo.objects.count(), 1)
+        saved_model = DumpInfo.objects.first()
+        self.assertEqual(saved_model.file_path, file_path)
+        self.assertEqual(saved_model.profile, profile)
+        self.assertEqual(saved_model.description, description)
+
+    def test_index_page_redirects_after_POST(self):
+        file_path = '/Users/J/Documents/ExampleImage/1.vmem'
+        profile = 'AutoDetect'
+        description = 'test'
+
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST['file_path'] = file_path
+        request.POST['profile'] = profile
+        request.POST['description'] = description
         response = index_page(request)
 
-        self.assertIn('/Users/J/Documents/ExampleImage/1.vmem', response.content.decode('utf-8'))
-        self.assertIn('AutoDetect', response.content.decode('utf-8'))
-        self.assertIn('test', response.content.decode('utf-8'))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
+
+    def test_index_page_displays_all_list_items(self):
+        DumpInfo.objects.create(
+            file_path='path1',
+            profile='profile1',
+            description='test1'
+        )
+        DumpInfo.objects.create(
+            file_path='path2',
+            profile='profile2',
+            description='test2'
+        )
+
+        request = HttpRequest()
+        response = index_page(request)
+
+        self.assertIn('path1', response.content.decode('utf-8'))
+        self.assertIn('profile1', response.content.decode('utf-8'))
+        self.assertIn('test1', response.content.decode('utf-8'))
+
+        self.assertIn('path2', response.content.decode('utf-8'))
+        self.assertIn('profile2', response.content.decode('utf-8'))
+        self.assertIn('test2', response.content.decode('utf-8'))
 
 
 class DumpInfoModelTest(TestCase):
