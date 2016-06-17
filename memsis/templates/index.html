@@ -25,7 +25,17 @@
 
     <input type="submit" id="id_dump_submit" value="추가">
     <br>
+
+    {% csrf_token %}
 </form>
+
+<table id="id_dump_list">
+    <tr>
+        <td>{{ file_path }}</td>
+        <td>{{ profile }}</td>
+        <td>{{ description }}</td>
+    </tr>
+</table>
 
 </body>
 </html>
