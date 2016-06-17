@@ -12,7 +12,7 @@ class FirstUserTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
-    def test_visit_main_page(self):
+    def test_visit_index_page(self):
         # memsys를 처음 사용하는 사용자가 페이지를 방문한다
         self.browser.get('http://localhost:8080')
 
@@ -27,7 +27,7 @@ class FirstUserTest(unittest.TestCase):
         #   운영체제 프로파일 정보
         #   덤프파일 설명
         inputbox = self.browser.find_element_by_id('id_file_path')
-        self.assertEqual(inputbox.get_attribute('placeholder'), '로컬 덤프파일 경로 입력')
+        self.assertEqual(inputbox.get_attribute('placeholder'), u'로컬 덤프파일 경로 입력')
 
         # 로컬 메모리 덤프파일 경로를 입력한다
         inputbox.send_keys('/Users/J/Documents/ExampleImage/1.vmem')
@@ -43,9 +43,13 @@ class FirstUserTest(unittest.TestCase):
         textarea.send_keys('Test')
 
         # 제출 버튼 클릭으로 페이지가 갱신되며 메모리 덤프 목록에 추가된다
+        # 제출 후 추가된 덤프파일 정보를 테이블에서 확인할 수 있다
         submit = self.browser.find_element_by_id('id_dump_submit')
+        self.assertEqual(submit.get_attribute('value'), u'추가')
         submit.click()
 
+
+        # 테이블에서 입력된 덤프파일 정보를 확인한다.
         table = self.browser.find_element_by_id('id_dump_list')
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn('/Users/J/Documents/ExampleImage/1.vmem', any(row for row in rows))

@@ -6,5 +6,24 @@
 </head>
 <body>
 
+    <h1>Lyzer</h1>
+
+    <label for="id_file_path">파일 경로</label>
+    <input type="text" id="id_file_path" name="file_path" placeholder="로컬 덤프파일 경로 입력"/>
+    <br>
+
+    <label for="id_select_profile">프로파일</label>
+    <select id="id_select_profile" name="profile">
+        <option value="AutoDetect">AutoDetect</option>
+    </select>
+    <br>
+
+    <label for="id_dump_description">메모리 덤프 설명</label>
+    <textarea id="id_dump_description" name="description"></textarea><br>
+
+
+    <input type="submit" id="id_dump_submit" value="추가">
+    <br>
+
 </body>
 </html>
