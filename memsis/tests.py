@@ -1,12 +1,12 @@
 from unittest import skip
 
 from django.http import HttpRequest
+from django.template.loader import render_to_string
 from django.test import TestCase
-
-# Create your tests here.
 from django.urls import resolve
 
 from memsis import views
+
 
 @skip
 class SmokeTest(TestCase):
@@ -23,7 +23,6 @@ class MainPageTest(TestCase):
     def test_returns_correct_main_page(self):
         request = HttpRequest()
         response = views.index(request)
+        expected_html = render_to_string('index.html')
 
-        self.assertTrue(response.content.startswith('<html>'))
-        self.assertIn(b'<title>Lyzer</title>', response.content)
-        self.assertTrue(response.content.endswith('</html>'))
+        self.assertEqual(response.content.decode(), expected_html)
