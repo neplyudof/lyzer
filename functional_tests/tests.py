@@ -1,11 +1,11 @@
 # coding=utf-8
 from __future__ import print_function
-import unittest
 
+from django.test import LiveServerTestCase
 from selenium import webdriver
 
 
-class FirstUserTest(unittest.TestCase):
+class FirstUserTest(LiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Chrome()
         self.browser.implicitly_wait(3)
@@ -44,8 +44,8 @@ class FirstUserTest(unittest.TestCase):
         self.assertTrue(any(description in row.text for row in rows))
 
     def test_visit_index_page(self):
-        # memsys를 처음 사용하는 사용자가 페이지를 방문한다
-        self.browser.get('http://localhost:8080')
+        # memsys를 처음 사용하는 사용자가 메인 페이지를 방문한다
+        self.browser.get(self.live_server_url)
 
         # 웹 페이지 타이틀과 헤더에 'Lyzer'를 표시하고 있다
         self.assertIn(u'Lyzer', self.browser.title)
@@ -72,7 +72,3 @@ class FirstUserTest(unittest.TestCase):
 
         # 덤프파일을 추가로 입력한다
         self.fail('Finish the test!')
-
-
-if __name__ == '__main__':
-    unittest.main()
