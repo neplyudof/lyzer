@@ -1,4 +1,5 @@
 # Create your views here.
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from os import path
@@ -24,3 +25,7 @@ def index_page(request):
     return render(request, 'index.html', {
         'dump_list': dump_list
     })
+
+
+def analysis_page(request, file_name):
+    return render(request, 'analysis.html')

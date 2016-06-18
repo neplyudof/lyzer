@@ -89,6 +89,12 @@ class MainPageTest(TestCase):
         self.assertIn('profile2', response.content.decode('utf-8'))
         self.assertIn('test2', response.content.decode('utf-8'))
 
+class AnalysisViewTest(TestCase):
+    def test_analysis_url_resolve(self):
+        response = self.client.get('/memsis/analysis/1.vmem')
+
+        self.assertTemplateUsed(response, 'analysis.html')
+
 
 class DumpInfoModelTest(TestCase):
     def test_saving_and_retrieving_items(self):

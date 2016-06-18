@@ -11,7 +11,8 @@ class FirstUserTest(LiveServerTestCase):
     def setUp(self):
         self.dump_lists = [
             ['/Users/J/Documents/ExampleImage/1.vmem', 'AutoDetect', 'test1'],
-            ['/Users/J/Documents/ExampleImage/2.vmem', 'AutoDetect', 'test2']
+            ['/Users/J/Documents/ExampleImage/2.vmem', 'AutoDetect', 'test2'],
+            ['asdlfjaldf', 'AutoDetect', 'testalkdfjad']
         ]
 
         self.browser = webdriver.Chrome()
@@ -70,13 +71,6 @@ class FirstUserTest(LiveServerTestCase):
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('Lyzer', header_text)
 
-        # 테이블 헤드 정보 확인
-        table = self.browser.find_element_by_id('id_dump_list')
-        ths = table.find_elements_by_tag_name('th')
-        self.assertTrue(any(u'파일 경로' == th.text for th in ths))
-        self.assertTrue(any(u'프로파일' == th.text for th in ths))
-        self.assertTrue(any(u'설명' == th.text for th in ths))
-
         # 분석할 덤프파일을 2회 추가한다
         # 입력내용
         #   메모리 덤프파일 로컬 경로
@@ -89,5 +83,18 @@ class FirstUserTest(LiveServerTestCase):
         # 테이블에서 입력된 덤프 파일을 확인한다
         self.check_for_row_in_dump_list()
 
-        # 덤프파일을 추가로 입력한다
+        # 테이블에 입력된 정보가 있는지 확인한다
+        table = self.browser.find_element_by_id('id_dump_list')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertTrue(len(rows) == len(self.dump_lists) + 1)
+
+        # 테이블에 입력된 항목을 클릭하면 메모리 덤프를 분석할 수 있는
+        # 새로운 URL로 바뀐다
+        # 첫 번째 항목을 선택한다
+        link_text = path.basename(self.dump_lists[1][0])
+        link = self.browser.find_element_by_link_text(link_text)
+        link.click()
+        self.assertRegexpMatches(self.browser.current_url, 'http://localhost:[0-9]*/memsis/analysis/' + link_text)
+
+        # 새로운 기능 테스트 추가하기
         self.fail('Finish the test!')

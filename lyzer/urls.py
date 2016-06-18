@@ -19,4 +19,5 @@ from memsis import views
 
 urlpatterns = [
     url(r'^$', views.index_page, name='home'),
+    url(r'^memsis/analysis/(?P<file_name>[a-zA-Z0-9]*)', views.analysis_page, name='analysis')
 ]
