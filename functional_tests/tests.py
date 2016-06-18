@@ -39,6 +39,7 @@ class FirstUserTest(LiveServerTestCase):
         # 테이블에서 입력된 덤프파일 정보를 확인한다.
         table = self.browser.find_element_by_id('id_dump_list')
         rows = table.find_elements_by_tag_name('tr')
+        
         self.assertTrue(any(file_path in row.text for row in rows))
         self.assertTrue(any(profile in row.text for row in rows))
         self.assertTrue(any(description in row.text for row in rows))

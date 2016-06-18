@@ -111,6 +111,7 @@ class DumpInfoModelTest(TestCase):
         self.assertEqual(first_saved_model.file_path, u'/Users/J/Documents/ExampleImage/1.vmem')
         self.assertEqual(first_saved_model.profile, 'WinXPSP2x86')
         self.assertEqual(first_saved_model.description, u'첫 번째 덤프파일')
+
         self.assertEqual(second_saved_model.file_path, u'/Users/J/Documents/ExampleImage/2.vmem')
         self.assertEqual(second_saved_model.profile, u'Win7SP1x86')
         self.assertEqual(second_saved_model.description, u'두 번째 덤프파일')
