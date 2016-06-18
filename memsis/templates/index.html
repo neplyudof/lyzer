@@ -8,7 +8,7 @@
 
 <h1>Lyzer</h1>
 
-<form method="post">
+<form action="{% url 'memsis:home' %}" method="post">
     <label for="id_file_path">파일 경로</label>
     <input type="text" id="id_file_path" name="file_path" placeholder="로컬 덤프파일 경로 입력"/>
     <br>
@@ -42,7 +42,7 @@
     {% for info in dump_list %}
         <tr>
             <td>{{ forloop.counter }}</td>
-            <td><a href='{% url 'analysis' info.file_name %}'>{{ info.file_name }}</a> </td>
+            <td><a href='{% url 'memsis:analysis' info.file_name %}'>{{ info.file_name }}</a> </td>
             <td>{{ info.file_path }}</td>
             <td>{{ info.profile }}</td>
             <td>{{ info.description }}</td>

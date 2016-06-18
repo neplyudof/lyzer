@@ -91,7 +91,7 @@ class MainPageTest(TestCase):
 
 class AnalysisViewTest(TestCase):
     def test_analysis_url_resolve(self):
-        response = self.client.get('/memsis/analysis/1.vmem')
+        response = self.client.get('/analysis/1.vmem')
 
         self.assertTemplateUsed(response, 'analysis.html')
 

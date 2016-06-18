@@ -13,11 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+from django.conf.urls import url
 
-import memsis
 from memsis import views
 
 urlpatterns = [
-    url(r'', include('memsis.urls', namespace='memsis')),
+    url(r'^$', views.index_page, name='home'),
+    url(r'^analysis/(?P<file_name>[a-zA-Z0-9]*)', views.analysis_page, name='analysis')
 ]

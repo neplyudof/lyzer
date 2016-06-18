@@ -94,7 +94,7 @@ class FirstUserTest(LiveServerTestCase):
         link_text = path.basename(self.dump_lists[1][0])
         link = self.browser.find_element_by_link_text(link_text)
         link.click()
-        self.assertRegexpMatches(self.browser.current_url, 'http://localhost:[0-9]*/memsis/analysis/' + link_text)
+        self.assertRegexpMatches(self.browser.current_url, 'http://localhost:[0-9]*/analysis/' + link_text)
 
         # 새로운 기능 테스트 추가하기
         self.fail('Finish the test!')
