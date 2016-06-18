@@ -32,6 +32,7 @@ class MainPageTest(TestCase):
 
     def test_index_page_can_save_POST_request(self):
         file_path = '/Users/J/Documents/ExampleImage/1.vmem'
+        file_name = '1.vmem'
         profile = 'AutoDetect'
         description = 'test'
 
@@ -45,6 +46,7 @@ class MainPageTest(TestCase):
 
         self.assertEqual(DumpInfo.objects.count(), 1)
         saved_model = DumpInfo.objects.first()
+        self.assertEqual(saved_model.file_name, file_name)
         self.assertEqual(saved_model.file_path, file_path)
         self.assertEqual(saved_model.profile, profile)
         self.assertEqual(saved_model.description, description)
