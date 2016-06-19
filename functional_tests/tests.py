@@ -1,18 +1,36 @@
 # coding=utf-8
 from __future__ import print_function
 
+import sys
 from os import path
 
+import time
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 
 
 class FirstUserTest(StaticLiveServerTestCase):
+    server_url = None
+
+    @classmethod
+    def setUpClass(cls):
+        for arg in sys.argv:
+            if 'liveserver' in arg:
+                cls.server_url = 'http://' + arg.split('=')[1]
+                return
+
+        super(FirstUserTest, cls).setUpClass()
+        cls.server_url = cls.live_server_url
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.server_url == cls.live_server_url:
+            super(FirstUserTest, cls).tearDownClass()
+
     def setUp(self):
         self.dump_lists = [
             ['/Users/J/Documents/ExampleImage/1.vmem', 'AutoDetect', 'test1'],
             ['/Users/J/Documents/ExampleImage/2.vmem', 'AutoDetect', 'test2'],
-            ['asdlfjaldf', 'AutoDetect', 'testalkdfjad']
         ]
 
         self.browser = webdriver.Chrome()
@@ -48,6 +66,9 @@ class FirstUserTest(StaticLiveServerTestCase):
         add_modal = self.browser.find_element_by_id('id_add_dump_btn')
         add_modal.click()
 
+        # 모달 다이얼로그의 로딩을 잠시 기다림
+        time.sleep(1)
+
         inputbox = self.browser.find_element_by_id('id_file_path')
         self.assertEqual(inputbox.get_attribute('placeholder'), u'로컬 덤프파일 경로 입력')
         # 로컬 메모리 덤프파일 경로를 입력한다
@@ -68,7 +89,7 @@ class FirstUserTest(StaticLiveServerTestCase):
 
     def test_visit_index_page(self):
         # memsys를 처음 사용하는 사용자가 메인 페이지를 방문한다
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
 
         # 웹 페이지 타이틀과 헤더에 'Lyzer'를 표시하고 있다
         self.assertIn(u'Lyzer', self.browser.title)
