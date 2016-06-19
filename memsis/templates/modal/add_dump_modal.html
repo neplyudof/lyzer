@@ -1,0 +1,56 @@
+<div class="modal fade" id="id_add_dump_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- 모달 헤더 -->
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">Memory Dump 추가</h4>
+            </div>
+            <!-- End 모달 헤더 -->
+
+            <!-- 모달 body -->
+            <form class="form-horizontal" action="{% url 'memsis:home' %}" method="post">
+                <div class="modal-body">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="id_file_path" class="col-xs-2 col-lg-2 col-md-2 control-label">파일 경로</label>
+                        <div class="col-xs-10 col-lg-10 col-md-10">
+                            <input type="text" class="form-control" id="id_file_path" name="file_path"
+                                   placeholder="로컬 덤프파일 경로 입력"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_select_profile" class="col-xs-2 col-lg-2 col-md-2 control-label">프로파일</label>
+                        <div class="col-xs-10 col-lg-10 col-md-10">
+                            <select class="form-control" id="id_select_profile" name="profile">
+                                <option value="AutoDetect">AutoDetect</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_dump_description" class="col-xs-2 col-lg-2 col-md-2 control-label">메모리 덤프
+                            설명</label>
+                        <div class="col-xs-10 col-lg-10 col-md-10">
+                            <textarea class="form-control" id="id_dump_description" name="description"
+                                      rows="5"></textarea>
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- End 모달 body -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+                    <input type="submit" id="id_dump_submit" class="btn btn-primary"/>
+                </div>
+            </form>
+
+        </div><!-- end div class=modal-content -->
+    </div><!-- end div class=modal-dialog -->
+</div><!-- end div class=modal fade -->

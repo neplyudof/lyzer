@@ -6,46 +6,44 @@
 
 {% block content %}
 
-    <form action="{% url 'memsis:home' %}" method="post">
-        <label for="id_file_path">파일 경로</label>
-        <input type="text" id="id_file_path" name="file_path" placeholder="로컬 덤프파일 경로 입력"/>
-        <br>
-
-        <label for="id_select_profile">프로파일</label>
-        <select id="id_select_profile" name="profile">
-            <option value="AutoDetect">AutoDetect</option>
-        </select>
-        <br>
-
-        <label for="id_dump_description">메모리 덤프 설명</label>
-        <textarea id="id_dump_description" name="description"></textarea><br>
 
 
-        <input type="submit" id="id_dump_submit" value="추가">
-        <br>
+    <div class="panel panel-default">
 
-        {% csrf_token %}
-    </form>
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                메모리 덤프 리스트
+                <a href="#id_add_dump_modal" id="id_add_dump_btn" class="pull-right text-success" data-toggle="modal">
+                    <span class="glyphicon glyphicon-plus">Add</span>
+                </a>
+            </h3>
+        </div><!-- end div class=panel-heading -->
 
-    <table id="id_dump_list">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>파일 이름</th>
-            <th>파일 경로</th>
-            <th>프로파일</th>
-            <th>설명</th>
-        </tr>
-        </thead>
-        {% for info in dump_list %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td><a href='{% url 'memsis:analysis' info.file_name %}'>{{ info.file_name }}</a></td>
-                <td>{{ info.file_path }}</td>
-                <td>{{ info.profile }}</td>
-                <td>{{ info.description }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+        <div class="panel-body table-responsive">
+            <table id="id_dump_list" class="table table-hover">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>파일 이름</th>
+                    <th>파일 경로</th>
+                    <th>프로파일</th>
+                    <th>설명</th>
+                </tr>
+                </thead>
+                {% for info in dump_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><a href='{% url 'memsis:analysis' info.file_name %}'>{{ info.file_name }}</a></td>
+                        <td>{{ info.file_path }}</td>
+                        <td>{{ info.profile }}</td>
+                        <td>{{ info.description }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div><!-- end div class=panel-body table-responsive -->
+
+    </div><!-- end div class=panel panel-default -->
+
+    {% include 'modal/add_dump_modal.html' %}
 
 {% endblock content %}
