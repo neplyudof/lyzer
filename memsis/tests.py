@@ -1,7 +1,8 @@
 # coding=utf-8
 from unittest import skip
+from urlparse import urlparse
 
-from django.core.urlresolvers import resolve
+from django.core.urlresolvers import resolve, reverse
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.test import TestCase
@@ -36,13 +37,14 @@ class MainPageTest(TestCase):
         profile = 'AutoDetect'
         description = 'test'
 
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST['file_path'] = file_path
-        request.POST['profile'] = profile
-        request.POST['description'] = description
-
-        index_page(request)
+        self.client.post(
+            reverse('memsis:home'),
+            data={
+                'file_path': file_path,
+                'profile': profile,
+                'description': description
+            }
+        )
 
         self.assertEqual(DumpInfo.objects.count(), 1)
         saved_model = DumpInfo.objects.first()
@@ -56,15 +58,17 @@ class MainPageTest(TestCase):
         profile = 'AutoDetect'
         description = 'test'
 
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST['file_path'] = file_path
-        request.POST['profile'] = profile
-        request.POST['description'] = description
-        response = index_page(request)
+        response = self.client.post(
+            reverse('memsis:home'),
+            data={
+                'file_path': file_path,
+                'profile': profile,
+                'description': description
+            }
+        )
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
+        self.assertEqual(urlparse(response['location']).path, reverse('memsis:home'))
 
     def test_index_page_displays_all_list_items(self):
         DumpInfo.objects.create(
@@ -88,6 +92,7 @@ class MainPageTest(TestCase):
         self.assertIn('path2', response.content.decode('utf-8'))
         self.assertIn('profile2', response.content.decode('utf-8'))
         self.assertIn('test2', response.content.decode('utf-8'))
+
 
 class AnalysisViewTest(TestCase):
     def test_analysis_url_resolve(self):
