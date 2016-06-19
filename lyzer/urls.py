@@ -15,9 +15,6 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 
-import memsis
-from memsis import views
-
 urlpatterns = [
     url(r'', include('memsis.urls', namespace='memsis')),
 ]
