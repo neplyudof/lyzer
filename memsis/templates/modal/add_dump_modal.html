@@ -28,7 +28,9 @@
                         <label for="id_select_profile" class="col-xs-2 col-lg-2 col-md-2 control-label">프로파일</label>
                         <div class="col-xs-10 col-lg-10 col-md-10">
                             <select class="form-control" id="id_select_profile" name="profile">
-                                <option value="AutoDetect">AutoDetect</option>
+                                {% for profile in profile_list %}
+                                    <option value="{{ profile }}">{{ profile }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>

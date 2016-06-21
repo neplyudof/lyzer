@@ -2,9 +2,10 @@
 from __future__ import print_function
 
 import sys
-from os import path
-
 import time
+from os import path
+from urlparse import urlparse
+
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 
@@ -119,7 +120,7 @@ class FirstUserTest(StaticLiveServerTestCase):
         link_text = path.basename(self.dump_lists[1][0])
         link = self.browser.find_element_by_link_text(link_text)
         link.click()
-        self.assertRegexpMatches(self.browser.current_url, 'http://localhost:[0-9]*/analysis/' + link_text)
+        self.assertRegexpMatches(urlparse(self.browser.current_url).path, '/analysis/' + link_text)
 
         # 새로운 기능 테스트 추가하기
         self.fail('Finish the test!')

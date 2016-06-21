@@ -8,3 +8,7 @@ class DumpInfo(models.Model):
     file_path = models.TextField(default='')
     profile = models.CharField(max_length=50, default='')
     description = models.TextField(default='')
+
+    def __unicode__(self):
+        return self.file_name
+   
