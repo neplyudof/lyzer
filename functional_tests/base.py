@@ -59,7 +59,7 @@ class FunctionalTest(StaticLiveServerTestCase):
             self.assertEqual(file_name, tds[1].text)
             self.assertEqual(file_path, tds[2].text)
 
-    def add_dump_file(self, file_path, profile='AutoDetect', description=''):
+    def add_dump_file(self, file_path, profile='AutoDetect', description='test'):
         # 메모리 덤프를 추가하기위해 Add 버튼을 클릭한다
         add_modal = self.browser.find_element_by_id('id_add_dump_btn')
         add_modal.click()
@@ -84,3 +84,4 @@ class FunctionalTest(StaticLiveServerTestCase):
         submit = self.browser.find_element_by_id('id_dump_submit')
         self.assertEqual(submit.get_attribute('type'), u'submit')
         submit.click()
+        time.sleep(2)

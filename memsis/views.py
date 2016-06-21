@@ -9,10 +9,10 @@ from memsis.models import DumpInfo
 
 vol_init = volinterface.RunVol()
 profiles = vol_init.profile_list()
-dump_list = DumpInfo.objects.all()
 
 
 def index_page(request):
+    dump_list = DumpInfo.objects.all()
     if request.method == 'POST':
         file_path = request.POST['file_path']
         file_name = path.basename(file_path)
@@ -34,7 +34,8 @@ def index_page(request):
                                                   'dump_list': dump_list,
                                                   'profile_list': profiles})
 
-        return redirect('/')
+        return redirect(dump)
+
 
     return render(request, 'index.html', {
         'dump_list': dump_list,

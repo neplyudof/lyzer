@@ -4,6 +4,8 @@ from __future__ import print_function
 from os import path
 from urlparse import urlparse
 
+import time
+
 from .base import FunctionalTest
 
 
@@ -23,7 +25,8 @@ class NewVisitorTest(FunctionalTest):
         #   운영체제 프로파일 정보
         #   덤프파일 설명
 
-        self.add_dump_file(self.dump[0])
+        file_path='/Users/J/Documents/ExampleImage/1.vmem'
+        self.add_dump_file(file_path=file_path)
 
         # 테이블에서 입력된 덤프 파일을 확인한다
         self.check_for_row_in_dump_list(self.dump[0])

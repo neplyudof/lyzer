@@ -39,3 +39,7 @@ class DumpInfoModelTest(TestCase):
         with self.assertRaises(ValidationError):
             dump.save()
             dump.full_clean()
+
+    def test_get_absolute_url(self):
+        dump = DumpInfo.objects.create()
+        self.assertEqual(dump.get_absolute_url(), '/')
