@@ -4,8 +4,6 @@ from __future__ import print_function
 import sys
 import time
 from os import path
-from unittest import skip
-from urlparse import urlparse
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
@@ -30,10 +28,7 @@ class FunctionalTest(StaticLiveServerTestCase):
             super(FunctionalTest, cls).tearDownClass()
 
     def setUp(self):
-        self.dump_lists = [
-            ['/Users/J/Documents/ExampleImage/1.vmem', 'AutoDetect', 'test1'],
-            ['/Users/J/Documents/ExampleImage/2.vmem', 'AutoDetect', 'test2'],
-        ]
+        self.dump = ['/Users/J/Documents/ExampleImage/1.vmem', 'AutoDetect', 'test1']
 
         self.browser = webdriver.Chrome()
         self.browser.implicitly_wait(3)
@@ -41,8 +36,11 @@ class FunctionalTest(StaticLiveServerTestCase):
     def tearDown(self):
         self.browser.quit()
 
-    def check_for_row_in_dump_list(self):
+    def check_for_row_in_dump_list(self, file_path):
+        file_name = path.basename(file_path)
+
         # 테이블에서 입력된 덤프파일 정보를 확인한다.
+        # 파일 이름과 파일 경로만 확인
         table = self.browser.find_element_by_id('id_dump_list')
         # 테이블 항목 검증
         rows = table.find_elements_by_tag_name('tr')
@@ -55,15 +53,13 @@ class FunctionalTest(StaticLiveServerTestCase):
                 self.assertTrue(u'프로파일' in rows[cnt].text)
                 self.assertTrue(u'설명' in rows[cnt].text)
                 continue
-            dump = self.dump_lists[cnt - 1]
+
             tds = rows[cnt].find_elements_by_tag_name('td')
             self.assertEqual(cnt, int(tds[0].text))
-            self.assertEqual(path.basename(dump[0]), tds[1].text)
-            self.assertEqual(dump[0], tds[2].text)
-            self.assertEqual(dump[1], tds[3].text)
-            self.assertEqual(dump[2], tds[4].text)
+            self.assertEqual(file_name, tds[1].text)
+            self.assertEqual(file_path, tds[2].text)
 
-    def add_dump_file(self, file_path, profile, description):
+    def add_dump_file(self, file_path, profile='AutoDetect', description=''):
         # 메모리 덤프를 추가하기위해 Add 버튼을 클릭한다
         add_modal = self.browser.find_element_by_id('id_add_dump_btn')
         add_modal.click()
@@ -88,62 +84,3 @@ class FunctionalTest(StaticLiveServerTestCase):
         submit = self.browser.find_element_by_id('id_dump_submit')
         self.assertEqual(submit.get_attribute('type'), u'submit')
         submit.click()
-
-
-class NewVisitorTest(FunctionalTest):
-    def test_visit_index_page(self):
-        # memsys를 처음 사용하는 사용자가 메인 페이지를 방문한다
-        self.browser.get(self.server_url)
-
-        # 웹 페이지 타이틀과 헤더에 'Lyzer'를 표시하고 있다
-        self.assertIn(u'Lyzer', self.browser.title)
-        # header_text = self.browser.find_element_by_class_name('navbar-brand')
-        # self.assertIn('Lyzer', header_text)
-
-        # 분석할 덤프파일을 2회 추가한다
-        # 입력내용
-        #   메모리 덤프파일 로컬 경로
-        #   운영체제 프로파일 정보
-        #   덤프파일 설명
-        for dump in self.dump_lists:
-            # 덤프 파일을 저장한다
-            self.add_dump_file(dump[0], dump[1], dump[2])
-
-        # 테이블에서 입력된 덤프 파일을 확인한다
-        self.check_for_row_in_dump_list()
-
-        # 테이블에 입력된 정보가 있는지 확인한다
-        table = self.browser.find_element_by_id('id_dump_list')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(len(rows) == len(self.dump_lists) + 1)
-
-        # 테이블에 입력된 항목을 클릭하면 메모리 덤프를 분석할 수 있는
-        # 새로운 URL로 바뀐다
-        # 첫 번째 항목을 선택한다
-        link_text = path.basename(self.dump_lists[1][0])
-        link = self.browser.find_element_by_link_text(link_text)
-        link.click()
-        self.assertRegexpMatches(urlparse(self.browser.current_url).path, '/analysis/' + link_text)
-
-        # 새로운 기능 테스트 추가하기
-        self.fail('Finish the test!')
-
-
-class ItemValidationTest(FunctionalTest):
-    @skip
-    def test_cannot_add_empty_list_items(self):
-        # 메인 페이지에 접속하여 파일 경로를 입력하지 않고 이를 등록하려 한다
-        # 입력 상자가 비어 있는 상태에서 제출 버튼을 클릭한다
-
-        # 페이지가 새로고침되고 빈 아이템을 등록할 수 없다는
-        # Todo: 폼 제출을 Ajax로 변경 후 모달창에 에러 메시지 출력하기!
-        # 에러 메시지가 표시된다
-
-        # 파일 경로를 입력하고 이번에는 정상 처리된다
-
-        # 다시 의도적으로 파일 경로를 입력하지 않고 제출 버튼을 클릭한다
-
-        # 다시 메인 페이지에 에러 메시지가 출력된다.
-
-        # 파일 경로를 입력하면 정상 동작한다
-        self.fail('write me')

@@ -22,22 +22,21 @@ class NewVisitorTest(FunctionalTest):
         #   메모리 덤프파일 로컬 경로
         #   운영체제 프로파일 정보
         #   덤프파일 설명
-        for dump in self.dump_lists:
-            # 덤프 파일을 저장한다
-            self.add_dump_file(dump[0], dump[1], dump[2])
+
+        self.add_dump_file(self.dump[0])
 
         # 테이블에서 입력된 덤프 파일을 확인한다
-        self.check_for_row_in_dump_list()
+        self.check_for_row_in_dump_list(self.dump[0])
 
         # 테이블에 입력된 정보가 있는지 확인한다
         table = self.browser.find_element_by_id('id_dump_list')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(len(rows) == len(self.dump_lists) + 1)
+        self.assertTrue(len(rows) > 1)
 
         # 테이블에 입력된 항목을 클릭하면 메모리 덤프를 분석할 수 있는
         # 새로운 URL로 바뀐다
         # 첫 번째 항목을 선택한다
-        link_text = path.basename(self.dump_lists[1][0])
+        link_text = path.basename(self.dump[0])
         link = self.browser.find_element_by_link_text(link_text)
         link.click()
         self.assertRegexpMatches(urlparse(self.browser.current_url).path, '/analysis/' + link_text)
