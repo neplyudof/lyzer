@@ -85,6 +85,20 @@ class MainPageTest(TestCase):
         self.assertIn('profile2', response.content.decode('utf-8'))
         self.assertIn('test2', response.content.decode('utf-8'))
 
+    def test_validation_errors_are_sent_back_to_index_page(self):
+        response = self.client.post('/', data={'file_path': '', 'profile': 'AutoDetect', 'description': 'test'})
+        self.assertEqual(response.status_code, 200)
+        expected_error = "This field cannot be blank."
+        self.assertContains(response, expected_error)
+
+    def test_invalid_dump_info_arent_saved(self):
+        self.client.post('/', data={
+            'file_path': '',
+            'profile': 'AutoDetect',
+            'description': 'test'
+        })
+        self.assertEqual(DumpInfo.objects.count(), 0)
+
 
 class AnalysisViewTest(TestCase):
     def test_analysis_url_resolve(self):

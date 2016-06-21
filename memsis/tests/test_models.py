@@ -1,5 +1,5 @@
 # coding=utf-8
-
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from memsis.models import DumpInfo
@@ -32,3 +32,10 @@ class DumpInfoModelTest(TestCase):
         self.assertEqual(second_saved_model.file_path, u'/Users/J/Documents/ExampleImage/2.vmem')
         self.assertEqual(second_saved_model.profile, u'Win7SP1x86')
         self.assertEqual(second_saved_model.description, u'두 번째 덤프파일')
+
+    def test_cannot_save_empty_file_path_dump_info(self):
+        dump = DumpInfo.objects.create(file_path='', profile='AutoDetect', description='')
+
+        with self.assertRaises(ValidationError):
+            dump.save()
+            dump.full_clean()

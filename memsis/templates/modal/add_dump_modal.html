@@ -16,6 +16,12 @@
                 <div class="modal-body">
                     {% csrf_token %}
 
+                    {% if error %}
+                        <div class="form-group has-error">
+                            <span class="help-block">{{ error }}</span>
+                        </div>
+                    {% endif %}
+
                     <div class="form-group">
                         <label for="id_file_path" class="col-xs-2 col-lg-2 col-md-2 control-label">파일 경로</label>
                         <div class="col-xs-10 col-lg-10 col-md-10">
