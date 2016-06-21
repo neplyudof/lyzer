@@ -11,4 +11,3 @@ class DumpInfo(models.Model):
 
     def __unicode__(self):
         return self.file_name
-   

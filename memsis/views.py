@@ -8,15 +8,10 @@ from memsis.models import DumpInfo
 
 
 def index_page(request):
-    vol_init = None
-
     if request.method == 'POST':
         file_path = request.POST['file_path']
         file_name = path.basename(file_path)
         profile = request.POST['profile']
-        if profile == 'AutoDetect':
-            vol_init = volinterface.RunVol(mem_path=file_path)
-            profile = vol_init.auto_detect_profile()
 
         DumpInfo.objects.create(
             file_name=file_name,
