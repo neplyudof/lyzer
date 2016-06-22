@@ -12,44 +12,17 @@
             <!-- End 모달 헤더 -->
 
             <!-- 모달 body -->
+            {% load crispy_forms_tags %}
             <form class="form-horizontal" action="{% url 'memsis:home' %}" method="post">
                 <div class="modal-body">
-                    {% csrf_token %}
 
                     {% if error %}
                         <div class="form-group has-error">
-                            <span class="help-block">{{ error }}</span>
+                            <p class="bg-danger"><span class="help-block">{{ error }}</span></p>
                         </div>
                     {% endif %}
 
-                    <div class="form-group">
-                        <label for="id_file_path" class="col-xs-2 col-lg-2 col-md-2 control-label">파일 경로</label>
-                        <div class="col-xs-10 col-lg-10 col-md-10">
-                            <input type="text" class="form-control" id="id_file_path" name="file_path"
-                                   placeholder="로컬 덤프파일 경로 입력"/>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="id_select_profile" class="col-xs-2 col-lg-2 col-md-2 control-label">프로파일</label>
-                        <div class="col-xs-10 col-lg-10 col-md-10">
-                            <select class="form-control" id="id_select_profile" name="profile">
-                                {% for profile in profile_list %}
-                                    <option value="{{ profile }}">{{ profile }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="id_dump_description" class="col-xs-2 col-lg-2 col-md-2 control-label">메모리 덤프
-                            설명</label>
-                        <div class="col-xs-10 col-lg-10 col-md-10">
-                            <textarea class="form-control" id="id_dump_description" name="description"
-                                      rows="5"></textarea>
-                        </div>
-                    </div>
-
+                    {% crispy form %}
 
                 </div>
                 <!-- End 모달 body -->

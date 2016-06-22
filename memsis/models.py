@@ -5,8 +5,8 @@ from django.db import models
 
 
 class DumpInfo(models.Model):
-    file_name = models.TextField(default='')
-    file_path = models.TextField(default='')
+    file_name = models.CharField(max_length=50, default='')
+    file_path = models.CharField(max_length=50, default='')
     profile = models.CharField(max_length=50, default='')
     description = models.TextField(default='')
 

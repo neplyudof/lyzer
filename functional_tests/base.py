@@ -68,15 +68,15 @@ class FunctionalTest(StaticLiveServerTestCase):
         time.sleep(1)
 
         inputbox = self.browser.find_element_by_id('id_file_path')
-        self.assertEqual(inputbox.get_attribute('placeholder'), u'로컬 덤프파일 경로 입력')
+        self.assertEqual(inputbox.get_attribute('placeholder'), u'메모리 덤프파일 절대 경로 입력')
         # 로컬 메모리 덤프파일 경로를 입력한다
         inputbox.send_keys(file_path)
         # 운영체제 프로파일을 선택한다
-        selectbox = self.browser.find_element_by_id('id_select_profile')
+        selectbox = self.browser.find_element_by_id('id_profile')
         select_option = selectbox.find_element_by_tag_name('option')
         self.assertEqual(select_option.text, profile)
         # 덤프파일 설명 입력
-        textarea = self.browser.find_element_by_id('id_dump_description')
+        textarea = self.browser.find_element_by_id('id_description')
         self.assertEqual(textarea.get_attribute('name'), 'description')
         textarea.send_keys(description)
         # 제출 버튼 클릭으로 페이지가 갱신되며 메모리 덤프 목록에 추가된다

@@ -59,7 +59,6 @@ vol_version = constants.VERSION
 
 # Volatility 명령 수행 클래스
 class RunVol:
-
     def __init__(self, profile='WinXPSP2x86', mem_path=''):
         """
         Volatility 기본 설정  초기화
@@ -202,3 +201,14 @@ class RunVol:
         print json
 
         return 'AutoDetect'
+
+
+def profile_list():
+    """
+    사용가능한 프로파일 리스트를 정렬 후 반환
+    :return: sorted profile list
+    """
+
+    vol_init = RunVol()
+
+    return vol_init.profile_list()
