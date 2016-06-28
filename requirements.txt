@@ -1,5 +1,7 @@
 distorm3==3.3.4
 Django==1.8.10
+django-crispy-forms==1.6.0
+djangoajax==2.3.6
 et-xmlfile==1.0.1
 jdcal==1.2
 openpyxl==2.4.0b1
