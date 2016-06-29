@@ -1,11 +1,21 @@
 # Create your views here.
+import json
 from os import path
 
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from memsis.forms import DumpInfoForm
 from memsis.models import DumpInfo
+from memsis.volinterface import RunVol
+
+
+def auto_detect_profile(file_path):
+    init_vol = RunVol(mem_path=file_path)
+    image_json = init_vol.run_plugin('imageinfo')
+    print image_json
 
 
 def index_page(request):
@@ -16,6 +26,9 @@ def index_page(request):
         file_path = request.POST['file_path']
         file_name = path.basename(file_path)
         profile = request.POST['profile']
+
+        if profile == 'AutoDetect':
+            profile, image_info = auto_detect_profile(file_path)
 
         dump = DumpInfo(
             file_name=file_name,
@@ -28,12 +41,19 @@ def index_page(request):
             dump.full_clean()
             dump.save()
         except ValidationError:
-            error = "This field cannot be blank."
-            return render(request, 'index.html', {'error': error,
-                                                  'dump_list': dump_list,
-                                                  'form': modal_form})
+            return HttpResponse(
+                json.dumps({
+                    "isSuccess": False,
+                    "error_message": "Form Validation Error"
+                })
+            )
 
-        return redirect(dump)
+        return HttpResponse(
+            json.dumps({
+                "location": reverse('memsis:home'),
+                "isSuccess": True}),
+            content_type='application/json'
+        )
 
     return render(request, 'index.html', {
         'dump_list': dump_list,

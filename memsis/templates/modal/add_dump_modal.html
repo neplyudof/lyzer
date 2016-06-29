@@ -13,7 +13,7 @@
 
             <!-- 모달 body -->
             {% load crispy_forms_tags %}
-            <form class="form-horizontal" action="{% url 'memsis:home' %}" method="post">
+            <form id="id-add-modal-form" class="form-horizontal" action="{% url 'memsis:home' %}" method="post">
                 <div class="modal-body">
 
                     {% if error %}

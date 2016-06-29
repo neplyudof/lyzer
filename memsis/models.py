@@ -15,3 +15,15 @@ class DumpInfo(models.Model):
 
     def __unicode__(self):
         return self.file_name
+
+
+class ImageInfo(models.Model):
+    dump_info = models.ForeignKey(DumpInfo)
+    suggested_profile = models.CharField(max_length=100, default='')
+    as_layer1 = models.CharField(max_length=100, default='')
+    as_layer2 = models.CharField(max_length=100, default='')
+    pae_type = models.CharField(max_length=100, default='')
+    dtb = models.BigIntegerField()
+    kdbg = models.BigIntegerField()
+    number_of_processors = models.PositiveSmallIntegerField()
+    service_pack = models.PositiveSmallIntegerField()
