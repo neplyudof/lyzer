@@ -1,12 +1,17 @@
 distorm3==3.3.4
 Django==1.8.10
 django-crispy-forms==1.6.0
+django-sse==0.4.1
 djangoajax==2.3.6
 et-xmlfile==1.0.1
+gevent==1.1.1
+greenlet==0.4.10
+gunicorn==19.6.0
 jdcal==1.2
 openpyxl==2.4.0b1
 pycrypto==2.6.1
 selenium==2.53.5
+sse==1.2
 ujson==1.35
 virtualenv==15.0.2
 volatility==2.5
