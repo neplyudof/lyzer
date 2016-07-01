@@ -27,5 +27,6 @@ exec gunicorn ${DJANGO_WSGI_MODULE}:application \
     --worker-class gevent \
     --user=$USER --group=$GROUP \
     --bind=127.0.0.1:8000 \
-    --log-level=debug
+    --log-level=debug \
+    --reload
 #--log-file=-
