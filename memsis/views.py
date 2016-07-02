@@ -5,17 +5,11 @@ from os import path
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 
 from memsis.forms import DumpInfoForm
 from memsis.models import DumpInfo
-from memsis.volinterface import RunVol
-
-
-def auto_detect_profile(file_path):
-    init_vol = RunVol(mem_path=file_path)
-    image_json = init_vol.run_plugin('imageinfo')
-    print image_json
+from memsis.task import auto_detect_profile
 
 
 def index_page(request):
@@ -27,18 +21,21 @@ def index_page(request):
         file_name = path.basename(file_path)
         profile = request.POST['profile']
 
-        if profile == 'AutoDetect':
-            profile, image_info = auto_detect_profile(file_path)
-
-        dump = DumpInfo(
-            file_name=file_name,
-            file_path=file_path,
-            profile=profile,
-            description=request.POST['description']
-        )
-
         try:
+            dump = DumpInfo(
+                file_name=file_name,
+                file_path=file_path,
+                profile=profile,
+                description=request.POST['description']
+            )
             dump.full_clean()
+
+            if profile == 'AutoDetect':
+                prof, imageInfo = auto_detect_profile(file_path)
+                dump.profile = prof
+                imageInfo.dump_info = dump
+                imageInfo.save()
+
             dump.save()
         except ValidationError:
             return HttpResponse(

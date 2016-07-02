@@ -30,6 +30,7 @@ $(function () {
             url: '/',
             type: 'POST',
             data: formValues,
+            timeout: 20000,
 
             success: function (response) {
                 var result = JSON.parse(response);
