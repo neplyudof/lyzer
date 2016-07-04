@@ -1,5 +1,7 @@
 $(function () {
 
+    // var loading_gif = $('#id_loading_gif');
+
     // Data to Json
     $.fn.serializeObject = function () {
         var o = {};
@@ -19,17 +21,59 @@ $(function () {
         return o;
     };
 
+    $(document).ajaxStart(function () {
+        var result_table = $('#id_plugin_result');
+
+        if ($.fn.DataTable.isDataTable(result_table)) {
+
+            // console.log('Datatable Destroy');
+            result_table.DataTable().clear();
+            result_table.DataTable().destroy();
+            result_table.children().remove();
+        }
+
+        $.LoadingOverlay('show');
+    }).ajaxStop(function () {
+        $.LoadingOverlay('hide');
+    });
+    
+    // 샌드박스 분석 요청
+    $('#id_send_cuckoo').click(function (event) {
+        event.preventDefault();
+        
+        pid = $('#id_pid').val();
+        dump_id = $('#id_dump_id').val();
+        console.log(pid);
+        
+        $.ajax({
+            url: '/runplugin/' + dump_id + '/procdump?pid=' + pid,
+            type: 'GET',
+            timeout: 60000,
+            
+            success: function (res) {
+                
+            },
+            
+            error: function (xhr, err_msg, err) {
+                console.log(err_msg);
+                console.log(xhr.responseText);
+                console.log(err);
+            }
+        })
+    });
+
     // 플러그인 명령 수행
     $('.run-plugin').click(function (event) {
         event.preventDefault();
 
-        cmd = $(this).text();
+        btn = $(this);
+        cmd = btn.text();
         dump_id = $('#id_dump_id').val();
 
         $.ajax({
             url: '/runplugin/' + dump_id + '/' + cmd,
             type: 'GET',
-            timeout: 20000,
+            timeout: 60000,
 
             success: function (res) {
                 var result = res['result'];
@@ -45,17 +89,8 @@ $(function () {
                     })
                 }
 
-                var result_table = $('#id_plugin_result');
-
-                if ($.fn.DataTable.isDataTable(result_table)) {
-
-                    // console.log('Datatable Destroy');
-                    result_table.DataTable().clear();
-                    result_table.DataTable().destroy();
-                    result_table.children().remove();
-                }
-
                 console.log(rows);
+                var result_table = $('#id_plugin_result');
 
                 result_table
                     .DataTable({

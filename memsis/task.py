@@ -1,3 +1,9 @@
+import contextlib
+import os
+import tempfile
+
+import shutil
+
 from memsis.models import ImageInfo
 from memsis.volinterface import RunVol
 
@@ -34,3 +40,26 @@ def get_plugin_list():
     plugins = [plugin for plugin in init_vol.plugins.keys()
                if not plugin.startswith('mac') and not plugin.startswith('linux')]
     return sorted(plugins)
+
+
+@contextlib.contextmanager
+def cd(newdir, cleanup=lambda: True):
+    prevdir = os.getcwd()
+    os.chdir(os.path.expanduser(newdir))
+
+    try:
+        yield
+    finally:
+        os.chdir(prevdir)
+        cleanup()
+
+
+@contextlib.contextmanager
+def tempdir():
+    dirpath = tempfile.mkdtemp()
+
+    def cleanup():
+        shutil.rmtree(dirpath)
+
+    with cd(dirpath, cleanup):
+        yield dirpath

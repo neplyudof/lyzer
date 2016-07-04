@@ -1,3 +1,5 @@
+{% load staticfiles %}
+
 <div class="container-fluid">
     <div class="panel panel-default">
 
@@ -11,33 +13,40 @@
                     col-xs-2 col-lg-2 col-md-2">
             <input type="hidden" id="id_dump_id" value="{{ dump.id }}">
             <table id="id_plugin_list" class="table table-bordered display"
-                                               width="50" cellspacing="0">
+                   width="50" cellspacing="0">
                 <thead>
-                    <tr>
-                        <th>플러그인 리스트</th>
-                    </tr>
+                <tr>
+                    <th>플러그인 리스트</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for plugin_name in plugin_list %}
-                        <tr>
-                            <td><button class="btn btn-default run-plugin">{{ plugin_name }}</button></td>
-                        </tr>
-                    {% endfor %}
+                {% for plugin_name in plugin_list %}
+                    <tr>
+                        {% if 'dump' in plugin_name and 'vaddump' not in plugin_name %}
+                            <td>
+                                <button class="btn btn-danger run-plugin">{{ plugin_name }}</button>
+                            </td>
+                        {% else %}
+                            <td>
+                                <button class="btn btn-default run-plugin">{{ plugin_name }}</button>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div><!-- end div class=panel-body table-responsive -->
 
         <div class="panel-body table-responsive
                     col-xs-10 col-lg-10 col-md-10">
+            <div class="input-group col-xs-2 col-lg-2 col-md-2 pull-right">
+                <input id="id_pid" type="text" class="form-control" placeholder="pid...">
+                <span class="input-group-btn">
+                    <button id="id_send_cuckoo" class="btn btn-default" type="button">Send</button>
+                </span>
+            </div>
             <table id="id_plugin_result" class="table table-bordered display" width="100%">
-{#                <thead>#}
-{#                    <tr id="id_result_thead">#}
-{##}
-{#                    </tr>#}
-{#                </thead>#}
-{#                <tbody id="id_result_body">#}
-{##}
-{#                </tbody>#}
+{#                <img id="id_loading_gif" src="{% static 'img/loading.gif' %}" style="display:none" alt="Loading..."/>#}
             </table>
         </div><!-- end div class=panel-body table-responsive -->
 

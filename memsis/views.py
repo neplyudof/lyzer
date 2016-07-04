@@ -1,5 +1,6 @@
 # Create your views here.
 import json
+import os
 from os import path
 
 from django.core.exceptions import ValidationError
@@ -8,7 +9,7 @@ from django.shortcuts import render
 
 from memsis.forms import DumpInfoForm
 from memsis.models import DumpInfo, ImageInfo
-from memsis.task import auto_detect_profile, get_plugin_list, update_config
+from memsis.task import auto_detect_profile, get_plugin_list, update_config, tempdir
 from memsis.volinterface import RunVol
 
 
@@ -78,11 +79,20 @@ def analysis_page(request, dump_id):
 
 def run_plugin(request, dump_id, cmd):
     plugin_name = str(cmd)
-    print dump_id
-    print cmd
     dump = DumpInfo.objects.get(pk=dump_id)
+
     init_vol = RunVol(profile=dump.profile, mem_path=dump.file_path)
-    result = init_vol.run_plugin(plugin_name)
+
+    if 'procdump' == plugin_name:
+        pid = request.GET['pid']
+        print pid
+
+        with tempdir() as dirpath:
+            result = init_vol.run_plugin(plugin_name, pid=pid, dump_dir=dirpath)
+            proc_dump = os.listdir(dirpath)[0]
+            print proc_dump
+    else:
+        result = init_vol.run_plugin(plugin_name)
 
     return HttpResponse(
         json.dumps({
