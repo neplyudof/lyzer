@@ -33,7 +33,7 @@
                 {% for info in dump_list %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td><a href='{% url 'memsis:analysis' info.file_name %}'>{{ info.file_name }}</a></td>
+                        <td><a href='{% url 'memsis:analysis' info.id %}'>{{ info.file_name }}</a></td>
                         <td>{{ info.file_path }}</td>
                         <td>{{ info.profile }}</td>
                         <td>{{ info.description }}</td>

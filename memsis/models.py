@@ -28,19 +28,19 @@ class ImageInfo(models.Model):
     # kuser_shared_data - 정수
     # image_date_and_time - date
     # image_local_date_and_time - date
-    dump_info = models.ForeignKey(DumpInfo)
+    dump_info = models.ForeignKey(DumpInfo, on_delete=models.CASCADE)
     suggested_profile = models.CharField(max_length=100, default='')
     as_layer1 = models.CharField(max_length=100, default='')
     as_layer2 = models.CharField(max_length=100, default='')
     pae_type = models.CharField(max_length=10, default='')
-    dtb = models.BigIntegerField()
-    kdbg = models.BigIntegerField()
-    number_of_processors = models.PositiveSmallIntegerField()
-    image_type = models.PositiveSmallIntegerField()
-    kpcr_for_cpu_0 = models.BigIntegerField()
-    kuser_shared_data = models.BigIntegerField()
-    image_date_and_time = models.DateTimeField()
-    image_local_data_and_time = models.DateTimeField()
+    dtb = models.BigIntegerField(default=0)
+    kdbg = models.BigIntegerField(default=0)
+    number_of_processors = models.PositiveSmallIntegerField(default=0)
+    image_type = models.PositiveSmallIntegerField(default=0)
+    kpcr_for_cpu_0 = models.BigIntegerField(default=0)
+    kuser_shared_data = models.BigIntegerField(default=0)
+    image_date_and_time = models.CharField(max_length=100, default='')
+    image_local_data_and_time = models.CharField(max_length=100, default='')
 
     def update_key(self, key, value):
         self.__setattr__(key, value)

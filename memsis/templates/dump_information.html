@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block header_text %}
+    Lyzer
+{% endblock header_text %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Memory Dump Information
+                </h3>
+            </div><!-- end div class=panel-heading -->
+
+            <div class="panel-body table-responsive
+                    col-xs-6 col-lg-6 col-md-6">
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th scope="row">MD5</th>
+                        <td>{{ dump.id }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">FILE NAME</th>
+                        <td>{{ dump.file_name }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">FILE PATH</th>
+                        <td>{{ dump.file_path }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">PROFILE</th>
+                        <td>{{ dump.profile }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">DESCRIPTION</th>
+                        <td>{{ dump.description }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div><!-- end div class=panel-body table-responsive -->
+
+            <div class="panel-body table-responsive
+                    col-xs-6 col-lg-6 col-md-6">
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th scope="row">Suggested Profile(s)</th>
+                        <td>{{ image_info.suggested_profile }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Number of processors</th>
+                        <td>{{ image_info.number_of_processors }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Service Pack</th>
+                        <td>{{ image_info.image_type }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Image Date & Time</th>
+                        <td>{{ image_info.image_date_and_time }}</td>
+                    </tr>
+                    <tr></tr>
+                    </tbody>
+                </table>
+            </div><!-- end div class=panel-body table-responsive -->
+
+        </div><!-- end div class=panel panel-default -->
+    </div>
+
+    {% include 'analysis_information.html' %}
+
+{% endblock content %}

@@ -19,5 +19,6 @@ from memsis import views
 
 urlpatterns = [
     url(r'^$', views.index_page, name='home'),
-    url(r'^analysis/(?P<file_name>[a-zA-Z0-9]*)', views.analysis_page, name='analysis')
+    url(r'^analysis/(?P<dump_id>[a-zA-Z0-9]*)', views.analysis_page, name='analysis'),
+    url(r'^runplugin/(?P<dump_id>[a-zA-Z0-9]*)/(?P<cmd>[a-z]*)', views.run_plugin, name='run_plugin'),
 ]

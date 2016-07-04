@@ -1,0 +1,45 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                Analyze
+            </h3>
+        </div><!-- end div class=panel-heading -->
+
+        <div class="panel-body table-responsive
+                    col-xs-2 col-lg-2 col-md-2">
+            <input type="hidden" id="id_dump_id" value="{{ dump.id }}">
+            <table id="id_plugin_list" class="table table-bordered display"
+                                               width="50" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>플러그인 리스트</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for plugin_name in plugin_list %}
+                        <tr>
+                            <td><button class="btn btn-default run-plugin">{{ plugin_name }}</button></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div><!-- end div class=panel-body table-responsive -->
+
+        <div class="panel-body table-responsive
+                    col-xs-10 col-lg-10 col-md-10">
+            <table id="id_plugin_result" class="table table-bordered display" width="100%">
+{#                <thead>#}
+{#                    <tr id="id_result_thead">#}
+{##}
+{#                    </tr>#}
+{#                </thead>#}
+{#                <tbody id="id_result_body">#}
+{##}
+{#                </tbody>#}
+            </table>
+        </div><!-- end div class=panel-body table-responsive -->
+
+    </div><!-- end div class=panel panel-default -->
+</div>

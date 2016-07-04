@@ -104,4 +104,4 @@ class AnalysisViewTest(TestCase):
     def test_analysis_url_resolve(self):
         response = self.client.get('/analysis/1.vmem')
 
-        self.assertTemplateUsed(response, 'analysis.html')
+        self.assertTemplateUsed(response, 'dump_information.html')

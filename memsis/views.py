@@ -3,13 +3,13 @@ import json
 from os import path
 
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import render
 
 from memsis.forms import DumpInfoForm
-from memsis.models import DumpInfo
-from memsis.task import auto_detect_profile
+from memsis.models import DumpInfo, ImageInfo
+from memsis.task import auto_detect_profile, get_plugin_list, update_config
+from memsis.volinterface import RunVol
 
 
 def index_page(request):
@@ -30,13 +30,13 @@ def index_page(request):
             )
             dump.full_clean()
 
+            prof, image_info = auto_detect_profile(file_path)
             if profile == 'AutoDetect':
-                prof, imageInfo = auto_detect_profile(file_path)
                 dump.profile = prof
-                imageInfo.dump_info = dump
-                imageInfo.save()
 
             dump.save()
+            image_info.dump_info = dump
+            image_info.save()
         except ValidationError:
             return HttpResponse(
                 json.dumps({
@@ -47,7 +47,7 @@ def index_page(request):
 
         return HttpResponse(
             json.dumps({
-                "location": reverse('memsis:home'),
+                "location": '/analysis/{0}'.format(dump.id),
                 "isSuccess": True}),
             content_type='application/json'
         )
@@ -58,5 +58,35 @@ def index_page(request):
     })
 
 
-def analysis_page(request, file_name):
-    return render(request, 'analysis.html')
+def analysis_page(request, dump_id):
+    dump = DumpInfo.objects.get(pk=dump_id)
+    image_info = ImageInfo.objects.get(dump_info_id=dump_id)
+
+    update_config({
+        'location': str('file//' + dump.file_path),
+        'profile': str(dump.profile)
+    })
+
+    return render(request,
+                  'dump_information.html',
+                  {
+                      'dump': dump,
+                      'image_info': image_info,
+                      'plugin_list': get_plugin_list()
+                  })
+
+
+def run_plugin(request, dump_id, cmd):
+    plugin_name = str(cmd)
+    print dump_id
+    print cmd
+    dump = DumpInfo.objects.get(pk=dump_id)
+    init_vol = RunVol(profile=dump.profile, mem_path=dump.file_path)
+    result = init_vol.run_plugin(plugin_name)
+
+    return HttpResponse(
+        json.dumps({
+            'result': result
+        }),
+        content_type='applicattion/json'
+    )

@@ -118,12 +118,12 @@ class RunVol:
             "write": False
         }
 
+        self.config.parse_options()
+
         if self.osprofile:
             base_conf["profile"] = self.osprofile
 
-        for key, value in base_conf.items():
-            self.config.update(key, value)
-
+        self.update_config(base_conf)
         # 사용가능한 플러그인 목록 저장
         # self.plugins = Dictionary
         #   key: 플러그인 클래스 이름
@@ -139,6 +139,10 @@ class RunVol:
                 self.plugin_list.append(cmd_name)
 
         return self.config
+
+    def update_config(self, conf_dict):
+        for key, value in conf_dict.items():
+            self.config.update(key, value)
 
     def profile_list(self):
         """
@@ -180,6 +184,8 @@ class RunVol:
                     self.config.update(option, value)
 
             if output_style == 'json':
+                print '[ Run ]'
+                print command
                 return self._get_json(command)
 
     def _get_json(self, plugin_class):
@@ -194,13 +200,6 @@ class RunVol:
         plugin.render_json(strio, plugin.calculate())
 
         return json.loads(strio.getvalue())
-
-    def auto_detect_profile(self):
-        json = self.run_plugin('imageinfo')
-
-        print json
-
-        return 'AutoDetect'
 
 
 def profile_list():

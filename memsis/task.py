@@ -1,24 +1,36 @@
-import json
-
 from memsis.models import ImageInfo
 from memsis.volinterface import RunVol
 
+init_vol = RunVol()
+
 
 def auto_detect_profile(file_path):
-    init_vol = RunVol(mem_path=file_path)
-    image_json = init_vol.run_plugin('imageinfo')
+    update_config({'location': str('file://' + file_path)})
+    image_json = init_vol.run_plugin(str('imageinfo'))
 
-    parsed_json = json.loads(image_json)
+    image_info = ImageInfo()
 
-    imageInfo = ImageInfo()
+    columns = image_json.get('columns')
+    rows = image_json.get('rows')[0]
 
-    for key, value in zip(parsed_json['columns'], parsed_json['rows'][0]):
+    for key, value in zip(columns, rows):
         key = key.lower().replace(' ', '_')
+
         if '(' in key:
             key = key[:key.find('(')]
         if key.endswith('_'):
             key = key[:len(key) - 1]
 
-        imageInfo.update_key(key, value)
+        image_info.update_key(key, value)
 
-    return imageInfo.suggested_profile[0], imageInfo
+    return image_info.suggested_profile.split(', ')[0], image_info
+
+
+def update_config(config):
+    init_vol.update_config(config)
+
+
+def get_plugin_list():
+    plugins = [plugin for plugin in init_vol.plugins.keys()
+               if not plugin.startswith('mac') and not plugin.startswith('linux')]
+    return sorted(plugins)
