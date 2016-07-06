@@ -86,30 +86,6 @@ $(function () {
                 var strWindowFeatures = "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes";
                 $.LoadingOverlay('hide');
                 var w = window.open("http://10.211.55.10" + url, "Cuckoo Sandbox", strWindowFeatures);
-                
-                // console.log(data);
-                // $('<div class="modal fade">' +
-                //     '   <div class="modal-dialog modal-lg">' +
-                //     '       <div class="modal-content">' +
-                //     '           <div class="modal-header">' +
-                //     '               <button type="button" class="close" data-dismiss="modal">' +
-                //     '                   <span aria-hidden="true">&times;</span>' +
-                //     '                   <span class="sr-only">Close</span>' +
-                //     '               </button>' +
-                //     '           </div>' +
-                //     '           <div class="modal-body">' +
-                //     '               ' + data +
-                //     '           </div>' +
-                //     '           <div class="modal-footer">' +
-                //     '               <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>' +
-                //     '           </div>' +
-                //     '       </div>' +
-                //     '   </div>' +
-                //     '</div>')
-                //     .modal({
-                //         keyboard: false
-                //     });
-
             },
 
             error: function (xhr, err_msg, err) {
