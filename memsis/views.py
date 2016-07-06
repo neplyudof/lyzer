@@ -1,6 +1,8 @@
+# coding=utf-8
 # Create your views here.
 import json
 import os
+import requests
 from os import path
 
 from django.core.exceptions import ValidationError
@@ -12,6 +14,8 @@ from memsis.models import DumpInfo, ImageInfo
 from memsis.task import auto_detect_profile, get_plugin_list, update_config, tempdir
 from memsis.volinterface import RunVol
 
+# POST 요청
+REST_CREATE_FILE = 'http://127.0.0.1/cuckoo/tasks/create/file'
 
 def index_page(request):
     dump_list = DumpInfo.objects.all()
@@ -88,9 +92,16 @@ def run_plugin(request, dump_id, cmd):
         print pid
 
         with tempdir() as dirpath:
-            result = init_vol.run_plugin(plugin_name, pid=pid, dump_dir=dirpath)
+            init_vol.run_plugin(plugin_name, pid=pid, dump_dir=dirpath)
             proc_dump = os.listdir(dirpath)[0]
-            print proc_dump
+            proc_path = os.path.abspath(os.path.join(dirpath, proc_dump))
+
+            with open(proc_path, 'rb') as exe_file:
+                multipart_file = {"file": ("temp_file_name", exe_file)}
+                req = requests.post(REST_CREATE_FILE, files=multipart_file)
+                json_decoder = json.JSONDecoder()
+                result = json_decoder.decode(req.text)['task_id']
+
     else:
         result = init_vol.run_plugin(plugin_name)
 

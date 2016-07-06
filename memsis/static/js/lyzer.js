@@ -21,39 +21,50 @@ $(function () {
         return o;
     };
 
-    $(document).ajaxStart(function () {
+
+    $(document).ajaxStart(function (options) {
         var result_table = $('#id_plugin_result');
+        var target = options.target.URL;
+        
+        if (target.indexOf('cuckoo') == -1) {
+            $.LoadingOverlay('show');
+        }
 
-        if ($.fn.DataTable.isDataTable(result_table)) {
-
+        if ($.fn.DataTable.isDataTable(result_table)
+                && target.indexOf('cuckoo') == -1) {
+            
             // console.log('Datatable Destroy');
             result_table.DataTable().clear();
             result_table.DataTable().destroy();
             result_table.children().remove();
         }
 
-        $.LoadingOverlay('show');
-    }).ajaxStop(function () {
-        $.LoadingOverlay('hide');
+    }).ajaxStop(function (options) {
+        var target = options.target.URL;
+        
+        if (target.indexOf('cuckoo') == -1) {
+            $.LoadingOverlay('hide');
+        }
     });
-    
+
     // 샌드박스 분석 요청
     $('#id_send_cuckoo').click(function (event) {
         event.preventDefault();
-        
+
         pid = $('#id_pid').val();
         dump_id = $('#id_dump_id').val();
-        console.log(pid);
-        
+        // console.log(pid);
+
         $.ajax({
             url: '/runplugin/' + dump_id + '/procdump?pid=' + pid,
             type: 'GET',
             timeout: 60000,
-            
+
             success: function (res) {
-                
+                $.LoadingOverlay('show');
+                poll_report(res['result']);
             },
-            
+
             error: function (xhr, err_msg, err) {
                 console.log(err_msg);
                 console.log(xhr.responseText);
@@ -61,6 +72,54 @@ $(function () {
             }
         })
     });
+
+    // 샌드박스 분석 보고서 long-polling 함수
+    var poll_report = function (task_id) {
+        url = '/cuckoo/tasks/report/' + task_id + '/html';
+        
+        $.ajax({
+            url: url,
+            type: 'GET',
+
+            success: function (data) {
+                console.log('[[ Pool report ]] ' + url);
+                var strWindowFeatures = "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes";
+                $.LoadingOverlay('hide');
+                var w = window.open("http://10.211.55.10" + url, "Cuckoo Sandbox", strWindowFeatures);
+                
+                // console.log(data);
+                // $('<div class="modal fade">' +
+                //     '   <div class="modal-dialog modal-lg">' +
+                //     '       <div class="modal-content">' +
+                //     '           <div class="modal-header">' +
+                //     '               <button type="button" class="close" data-dismiss="modal">' +
+                //     '                   <span aria-hidden="true">&times;</span>' +
+                //     '                   <span class="sr-only">Close</span>' +
+                //     '               </button>' +
+                //     '           </div>' +
+                //     '           <div class="modal-body">' +
+                //     '               ' + data +
+                //     '           </div>' +
+                //     '           <div class="modal-footer">' +
+                //     '               <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>' +
+                //     '           </div>' +
+                //     '       </div>' +
+                //     '   </div>' +
+                //     '</div>')
+                //     .modal({
+                //         keyboard: false
+                //     });
+
+            },
+
+            error: function (xhr, err_msg, err) {
+                console.log(xhr.responseText);
+                setTimeout(function () {
+                    poll_report(task_id);
+                }, 30000)
+            }
+        })
+    };
 
     // 플러그인 명령 수행
     $('.run-plugin').click(function (event) {
@@ -89,7 +148,7 @@ $(function () {
                     })
                 }
 
-                console.log(rows);
+                // console.log(rows);
                 var result_table = $('#id_plugin_result');
 
                 result_table
